@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AJAX Assignment</title>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    margin:20px;
+    background:#f5f5f5;
+}
+
+section{
+    background:white;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+button{
+    padding:10px 15px;
+    background:#007bff;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    margin-bottom:10px;
+}
+
+button:hover{
+    background:#0056b3;
+}
+
+ul{
+    padding-left:20px;
+}
+
+#comments div{
+    background:#eef;
+    padding:8px;
+    margin:5px 0;
+    border-radius:5px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+table th,
+table td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:left;
+}
+
+table th{
+    background:#007bff;
+    color:white;
+}
+</style>
+</head>
+<body>
+
+<!-- Task 1 -->
+<section>
+    <h2>Task 1 - Load Posts using $.ajax()</h2>
+    <button id="loadPosts">Load Posts</button>
+    <ul id="postsList"></ul>
+</section>
+
+<!-- Task 2 -->
+<section>
+    <h2>Task 2 - Load Comments using $.getJSON()</h2>
+    <button id="loadComments">Load Comments</button>
+    <div id="comments"></div>
+</section>
+
+<!-- Task 3 -->
+<section>
+    <h2>Task 3 - Restaurant List</h2>
+    <button id="loadRestaurants">Load Restaurants</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Restaurant Name</th>
+                <th>City</th>
+            </tr>
+        </thead>
+        <tbody id="restaurantTable"></tbody>
+    </table>
+</section>
+
+<!-- Task 4 -->
+<section>
+    <h2>Task 4 - Load Posts using Fetch API</h2>
+    <button id="loadPostsFetch">Load Posts (Fetch)</button>
+    <ul id="fetchPosts"></ul>
+</section>
+
+<script>
+
+/* ====================================
+   Task 1 - $.ajax()
+==================================== */
+
+$("#loadPosts").click(function(){
+
+    $("#postsList").empty();
+
+    $.ajax({
+        url: "https://jsonplaceholder.typicode.com/posts",
+        method: "GET",
+
+        success: function(data){
+
+            data.forEach(function(post){
+
+                $("#postsList").append(
+                    `<li>${post.title}</li>`
+                );
+
+            });
+
+        },
+
+        error: function(xhr, status, error){
+
+            console.error(error);
+            alert("Error loading posts.");
+
+        }
+    });
+
+});
+
+
+/* ====================================
+   Task 2 - $.getJSON()
+==================================== */
+
+$("#loadComments").click(function(){
+
+    $("#comments").empty();
+
+    $.getJSON(
+        "https://jsonplaceholder.typicode.com/comments",
+
+        function(data){
+
+            data.slice(0,5).forEach(function(comment){
+
+                $("#comments").append(
+                    `<div>${comment.email}</div>`
+                );
+
+            });
+
+        }
+    );
+
+});
+
+
+/* ====================================
+   Task 3 - Restaurant List
+==================================== */
+
+$("#loadRestaurants").click(function(){
+
+    $("#restaurantTable").empty();
+
+    $.ajax({
+        url:"https://jsonplaceholder.typicode.com/users",
+        method:"GET",
+
+        success:function(data){
+
+            data.forEach(function(user){
+
+                $("#restaurantTable").append(`
+                    <tr>
+                        <td>${user.name}</td>
+                        <td>${user.address.city}</td>
+                    </tr>
+                `);
+
+            });
+
+        },
+
+        error:function(){
+            alert("Unable to load restaurant data.");
+        }
+    });
+
+});
+
+
+/* ====================================
+   Task 4 - Fetch API Version
+==================================== */
+
+document
+.getElementById("loadPostsFetch")
+.addEventListener("click", function(){
+
+    const list = document.getElementById("fetchPosts");
+
+    list.innerHTML = "";
+
+    fetch("https://jsonplaceholder.typicode.com/posts")
+
+        .then(response => {
+
+            if(!response.ok){
+                throw new Error("HTTP Error");
+            }
+
+            return response.json();
+        })
+
+        .then(data => {
+
+            data.forEach(post => {
+
+                const li = document.createElement("li");
+                li.textContent = post.title;
+                list.appendChild(li);
+
+            });
+
+        })
+
+        .catch(error => {
+
+            console.error(error);
+            alert("Error loading posts with Fetch API.");
+
+        });
+
+});
+
+</script>
+
+</body>
+</html>
