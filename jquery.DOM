@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jQuery Practical Assignment</title>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f4f4;
+    padding:30px;
+}
+
+.section{
+    background:#fff;
+    padding:20px;
+    margin-bottom:25px;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+h2{
+    margin-bottom:15px;
+}
+
+button{
+    padding:10px 15px;
+    border:none;
+    background:#2874f0;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:.9;
+}
+
+/* Task 1 */
+#status{
+    margin-top:10px;
+    padding:15px;
+    background:#ddd;
+    border-radius:5px;
+    font-weight:bold;
+}
+
+/* Task 2 */
+#searchBox{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+}
+
+.restaurant{
+    padding:10px;
+    border-bottom:1px solid #ddd;
+}
+
+/* Task 3 */
+.product-card{
+    width:300px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.product-card img{
+    width:100%;
+    height:200px;
+    object-fit:cover;
+}
+
+.product-info{
+    padding:15px;
+}
+
+.price{
+    color:green;
+    font-size:20px;
+    margin:10px 0;
+}
+
+#productDescription{
+    display:none;
+    padding:15px;
+    background:#f8f8f8;
+}
+
+/* Task 4 */
+select{
+    padding:10px;
+    width:250px;
+    margin-bottom:15px;
+}
+
+#playlist{
+    background:#f9f9f9;
+    padding:15px;
+    border-radius:5px;
+}
+
+#playlist ul{
+    margin-left:20px;
+}
+</style>
+</head>
+<body>
+
+<!-- Task 1 -->
+<div class="section">
+    <h2>1. Online Status</h2>
+
+    <button id="onlineBtn">Go Online</button>
+
+    <div id="status">
+        Currently Offline
+    </div>
+</div>
+
+<!-- Task 2 -->
+<div class="section">
+    <h2>2. Zomato Style Restaurant Search</h2>
+
+    <input
+        type="text"
+        id="searchBox"
+        placeholder="Search Restaurants..."
+    >
+
+    <div id="restaurantList">
+        <div class="restaurant">Pizza Hut</div>
+        <div class="restaurant">Domino's Pizza</div>
+        <div class="restaurant">Burger King</div>
+        <div class="restaurant">KFC</div>
+        <div class="restaurant">Subway</div>
+        <div class="restaurant">McDonald's</div>
+        <div class="restaurant">Barbeque Nation</div>
+    </div>
+</div>
+
+<!-- Task 3 -->
+<div class="section">
+    <h2>3. Flipkart Style Product Card</h2>
+
+    <div class="product-card">
+
+        <img
+            src="https://picsum.photos/300/200"
+            alt="Product"
+        >
+
+        <div class="product-info">
+            <h3>Wireless Headphones</h3>
+            <div class="price">₹1,999</div>
+
+            <button id="detailsBtn">
+                Show Details
+            </button>
+        </div>
+
+        <div id="productDescription"></div>
+
+    </div>
+</div>
+
+<!-- Task 4 -->
+<div class="section">
+    <h2>4. Spotify Playlist Editor</h2>
+
+    <select id="genre">
+        <option value="">Select Genre</option>
+        <option value="Pop">Pop</option>
+        <option value="Rock">Rock</option>
+        <option value="Jazz">Jazz</option>
+    </select>
+
+    <div id="playlist">
+        Select a genre to view songs.
+    </div>
+</div>
+
+<script>
+
+$(document).ready(function(){
+
+    /* ==========================
+       Task 1
+    ========================== */
+
+    $("#onlineBtn").click(function(){
+
+        $("#status")
+            .text("You are now online!")
+            .css({
+                "background":"green",
+                "color":"white"
+            });
+
+    });
+
+    /* ==========================
+       Task 2
+    ========================== */
+
+    $("#searchBox").keyup(function(){
+
+        let value = $(this)
+            .val()
+            .toLowerCase();
+
+        $(".restaurant").filter(function(){
+
+            $(this).toggle(
+                $(this)
+                .text()
+                .toLowerCase()
+                .indexOf(value) > -1
+            );
+
+        });
+
+    });
+
+    /* ==========================
+       Task 3
+    ========================== */
+
+    $("#detailsBtn").click(function(){
+
+        if($("#productDescription").html() === ""){
+
+            $("#productDescription").html(`
+                <p>
+                    Premium wireless headphones with
+                    noise cancellation, deep bass,
+                    40-hour battery life and Bluetooth 5.3.
+                </p>
+            `);
+
+        }
+
+        $("#productDescription").slideToggle();
+
+    });
+
+    /* ==========================
+       Task 4
+    ========================== */
+
+    $("#genre").change(function(){
+
+        let genre = $(this).val();
+
+        let songs = {
+            Pop:[
+                "Blinding Lights",
+                "Levitating",
+                "Shape of You"
+            ],
+
+            Rock:[
+                "Bohemian Rhapsody",
+                "Hotel California",
+                "Numb"
+            ],
+
+            Jazz:[
+                "Take Five",
+                "So What",
+                "Blue in Green"
+            ]
+        };
+
+        if(genre){
+
+            let html = "<h3>"+genre+" Playlist</h3><ul>";
+
+            songs[genre].forEach(function(song){
+                html += "<li>"+song+"</li>";
+            });
+
+            html += "</ul>";
+
+            $("#playlist").html(html);
+
+        }else{
+
+            $("#playlist").html(
+                "Select a genre to view songs."
+            );
+
+        }
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
