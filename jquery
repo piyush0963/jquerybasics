@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jQuery Assignment</title>
+
+<!-- jQuery CDN -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f4f4;
+    padding:20px;
+}
+
+/* Task 4 */
+.menu-item{
+    padding:12px;
+    margin:5px 0;
+    border-radius:5px;
+}
+
+.card{
+    max-width:400px;
+    margin-top:20px;
+    background:#fff;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.card img{
+    width:100%;
+    display:block;
+}
+
+.caption{
+    padding:15px;
+}
+
+button{
+    padding:10px 15px;
+    margin:5px;
+    border:none;
+    border-radius:5px;
+    background:#007bff;
+    color:white;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#0056b3;
+}
+
+#message{
+    display:none;
+    margin-top:10px;
+    padding:10px;
+    background:#d4edda;
+    color:#155724;
+    border-radius:5px;
+}
+</style>
+</head>
+<body>
+
+<h2>Task 4 - Menu Items</h2>
+
+<div class="menu-item">Home</div>
+<div class="menu-item">About</div>
+<div class="menu-item">Services</div>
+<div class="menu-item">Contact</div>
+
+<hr>
+
+<h2>Task 2 - Show Hidden Message</h2>
+
+<button id="showBtn">Show Message</button>
+
+<div id="message">
+    Welcome! This hidden message is now visible.
+</div>
+
+<hr>
+
+<h2>Task 3 - Instagram Style Post</h2>
+
+<div class="card">
+
+    <img src="https://picsum.photos/400/300" alt="Post Image">
+
+    <div class="caption" id="caption">
+        📸 Enjoying a beautiful day and capturing amazing moments!
+    </div>
+
+</div>
+
+<button id="hideCaption">Hide Caption</button>
+<button id="showCaption">Show Caption</button>
+
+<script>
+
+$(document).ready(function(){
+
+    /* Task 4 */
+    $('.menu-item').css({
+        'background-color':'#f5f5f5'
+    });
+
+    /* Task 2 */
+    $('#showBtn').click(function(){
+        $('#message').show();
+    });
+
+    /* Task 3 */
+    $('#hideCaption').click(function(){
+        $('#caption').hide();
+    });
+
+    $('#showCaption').click(function(){
+        $('#caption').show();
+    });
+
+});
+
+</script>
+
+</body>
+</html>
