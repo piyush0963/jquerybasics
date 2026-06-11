@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amazon Style Search Suggestion</title>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f4f4;
+    padding:40px;
+}
+
+.search-container{
+    width:500px;
+    margin:auto;
+    position:relative;
+}
+
+#search{
+    width:100%;
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    font-size:16px;
+}
+
+#suggestions{
+    position:absolute;
+    width:100%;
+    background:white;
+    border:1px solid #ddd;
+    border-top:none;
+    display:none;
+    max-height:250px;
+    overflow-y:auto;
+    z-index:100;
+}
+
+.suggestion{
+    padding:12px;
+    cursor:pointer;
+    border-bottom:1px solid #eee;
+}
+
+.suggestion:hover{
+    background:#f5f5f5;
+}
+
+.highlight{
+    background:yellow;
+    font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<div class="search-container">
+
+    <input
+        type="text"
+        id="search"
+        placeholder="Search Products..."
+    >
+
+    <div id="suggestions"></div>
+
+</div>
+
+<script>
+
+$(document).ready(function(){
+
+    let products = [];
+
+    /* Load JSON */
+
+    $.getJSON("products.json", function(data){
+        products = data;
+    });
+
+    /* Limit suggestions to 5 */
+
+    function limitSuggestions(arr){
+        return arr.slice(0,5);
+    }
+
+    /* Search */
+
+    $("#search").on("keyup", function(){
+
+        let searchText = $(this)
+            .val()
+            .toLowerCase()
+            .trim();
+
+        if(searchText === ""){
+            $("#suggestions").hide();
+            return;
+        }
+
+        let matchedProducts = products.filter(function(product){
+
+            return product.name
+                .toLowerCase()
+                .includes(searchText);
+
+        });
+
+        matchedProducts =
+            limitSuggestions(matchedProducts);
+
+        let html = "";
+
+        matchedProducts.forEach(function(product){
+
+            let regex =
+                new RegExp(
+                    "(" + searchText + ")",
+                    "ig"
+                );
+
+            let highlightedName =
+                product.name.replace(
+                    regex,
+                    '<span class="highlight">$1</span>'
+                );
+
+            html += `
+                <div
+                    class="suggestion"
+                    data-name="${product.name}"
+                >
+                    ${highlightedName}
+                </div>
+            `;
+        });
+
+        if(html !== ""){
+            $("#suggestions")
+                .html(html)
+                .show();
+        }else{
+            $("#suggestions").hide();
+        }
+
+    });
+
+    /* Click Suggestion */
+
+    $(document).on(
+        "click",
+        ".suggestion",
+        function(){
+
+            let selectedName =
+                $(this).data("name");
+
+            $("#search").val(selectedName);
+
+            $("#suggestions").hide();
+
+        }
+    );
+
+    /* Close dropdown when clicked outside */
+
+    $(document).click(function(e){
+
+        if(
+            !$(e.target)
+            .closest(".search-container")
+            .length
+        ){
+            $("#suggestions").hide();
+        }
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
